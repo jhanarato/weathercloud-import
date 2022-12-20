@@ -1,14 +1,11 @@
 library(tidyverse)
 
+read_weather_cloud_file <- function(file_name) {
+  read_delim(file_name, delim=";", locale = readr::locale(encoding = "UTF-16LE"))
+}
+
 import_weather <- function() {
   files <- list.files(pattern="*.csv")
-  
-  df_list <- vector("list", length(files))
-  
-  for (i in seq_along(files)) {
-    df_list[[i]] <- read_delim(files[[i]], delim=";", locale = readr::locale(encoding = "UTF-16LE"))
-  }
-  
-  bind_rows(df_list)
+  bind_rows(map(files, read_weather_cloud_file))
 }
 
